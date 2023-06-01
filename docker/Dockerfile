@@ -26,11 +26,5 @@ ENV PATH="/root/.local/bin:${PATH}"
 # Set the working directory
 WORKDIR /app
 
-# Add your application files (if needed)
-# ADD <source> <destination>
-
-# Set the entrypoint (if needed)
-# ENTRYPOINT ["command"]
-
-# Set the default command (if needed)
-# CMD ["command"]
+# Set the CMD to keep the container running
+CMD ["tail", "-f", "/dev/null"]
