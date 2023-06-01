@@ -26,6 +26,7 @@ module "instance" {
   image = var.image
   boot_disk_size_gb = var.boot_disk_size_gb
   subnet_id = module.subnet.subnet_id
+  network_id    = module.vpc.vpc_id
 }
 
 module "disk" {

@@ -25,3 +25,15 @@ variable "boot_disk_size_gb" {
 variable "subnet_id" {
   description = "The ID of the subnet where instances will be created"
 }
+
+variable "network_interface_name" {
+  description = "The name of the network interface"
+}
+
+variable "network_id" {
+  description = "The ID of the network for the instances"
+}
+
+variable "subnetwork_id" {
+  description = "The ID of the subnetwork for the instances"
+}

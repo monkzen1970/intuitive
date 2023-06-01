@@ -1,3 +1,14 @@
+resource "google_compute_network_interface" "interface" {
+  count = var.instance_count
+  name  = "${var.network_interface_name}-${count.index}"
+  network = var.network_id
+  subnetwork = var.subnetwork_id
+
+  access_config {
+    // Ephemeral IP
+  }
+}
+
 resource "google_compute_instance" "instance" {
   count        = var.instance_count
   name         = "${var.instance_name}-${count.index}"
@@ -12,6 +23,6 @@ resource "google_compute_instance" "instance" {
   }
 
   network_interface {
-    subnetwork = var.subnet_id
+    network_interface = google_compute_network_interface.interface[count.index].id
   }
 }
