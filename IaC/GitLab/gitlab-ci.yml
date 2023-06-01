@@ -1,0 +1,40 @@
+# This is YAML template for CI/CD pipeline in GitLab, specifically for validating, scanning,
+# and deploying Terraform Infrastructure as Code (IaC):
+#
+# In this YAML template:
+#
+# The pipeline is divided into three stages: validate, scan, and deploy.
+# The validate stage uses the hashicorp/terraform:latest Docker image to initialize Terraform
+# and then runs the terraform validate command to check the validity of your Terraform code.
+# The scan stage also uses the hashicorp/terraform:latest Docker image.
+# It formats and checks the Terraform code for any syntax or formatting issues using the terraform fmt command.
+# The deploy stage uses the hashicorp/terraform:latest Docker image to initialize Terraform again
+# and then applies the infrastructure changes using the terraform apply command with the -auto-approve flag.
+# You can add this YAML template to your GitLab repository and customize it further according
+# to your specific requirements, such as adding environment variables, caching, artifacts,
+# or integrating it with other services like AWS or Azure.
+
+stages:
+  - validate
+  - scan
+  - deploy
+
+validate:
+  stage: validate
+  image: hashicorp/terraform:latest
+  script:
+    - terraform init
+    - terraform validate
+
+scan:
+  stage: scan
+  image: hashicorp/terraform:latest
+  script:
+    - terraform fmt -check=true -diff=true -recursive
+
+deploy:
+  stage: deploy
+  image: hashicorp/terraform:latest
+  script:
+    - terraform init
+    - terraform apply -auto-approve

@@ -1,0 +1,56 @@
+# This is YAML template for Azure DevOps Pipeline to validate, scan, and deploy Terraform Infrastructure
+# as Code (IaC). The pipeline will have similar three steps:
+#
+#        terraform-validate: This task will validate the Terraform code.
+#        terraform-scan: This task will scan the Terraform code for potential security issues using Checkov.
+#        terraform-apply: This task will apply the Terraform configuration to deploy your infrastructure
+#
+# This YAML template defines a pipeline that:
+#
+# Installs a specific version of Terraform using the Terraform Installer task.
+# Checks out your code.
+# Initializes and validates your Terraform configuration.
+# Installs Checkov and scans your Terraform code.
+# Applies your Terraform configuration.
+# You would need to replace the clientId, clientSecret, subscriptionId, and tenantId
+# with your actual Azure credentials stored as Azure DevOps secrets.
+
+trigger:
+- feature/*
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  terraformVersion: '0.15.0'
+
+steps:
+- task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformInstaller@0
+  inputs:
+    terraformVersion: $(terraformVersion)
+
+- checkout: self
+
+- script: |
+    terraform init
+    terraform validate
+  displayName: 'Terraform Validate'
+
+- script: |
+    sudo apt-get update
+    sudo apt-get install -y python3-pip
+    pip3 install checkov
+    checkov -d .
+  displayName: 'Terraform Scan with Checkov'
+
+- script: |
+    terraform init
+    terraform apply -auto-approve
+  displayName: 'Terraform Apply'
+  env:
+    ARM_CLIENT_ID: $(clientId)
+    ARM_CLIENT_SECRET: $(clientSecret)
+    ARM_SUBSCRIPTION_ID: $(subscriptionId)
+    ARM_TENANT_ID: $(tenantId)
+
+

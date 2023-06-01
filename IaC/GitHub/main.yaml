@@ -1,0 +1,68 @@
+# This is the YAML template for a CI/CD pipeline using GitHub Actions that can be used to validate,
+# scan, and deploy Terraform Infrastructure as Code (IaC). The proposed CI/CD pipeline will consist of three jobs:
+#
+# terraform-validate: This job will validate the Terraform code.
+# terraform-scan: This job will scan the Terraform code for potential security issues using a tool like Checkov or Tfsec.
+# terraform-apply: This job will apply the Terraform configuration to deploy your infrastructure.
+#
+# Here is a simplified example of such a GitHub Actions workflow.
+# It is defined in a file called main.yaml located in the .github/workflows directory of your repository.
+# Please note that you need to add your own environment variables, secrets and modify the steps to match your requirements:
+
+name: 'Terraform CI/CD'
+
+on:
+  push:
+    branches:
+      - 'feature/*'
+
+jobs:
+  terraform-validate:
+    name: 'Terraform Validate'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+
+      - name: Terraform Init and Validate
+        run: |
+          terraform init
+          terraform validate
+
+  terraform-scan:
+    name: 'Terraform Scan'
+    needs: terraform-validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Checkov
+        run: |
+          pip install checkov
+
+      - name: Run Checkov against Terraform
+        run: |
+          checkov -d .
+
+  terraform-apply:
+    name: 'Terraform Apply'
+    needs: terraform-scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+
+      - name: Terraform Init and Apply
+        run: |
+          terraform init
+          terraform apply -auto-approve
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
