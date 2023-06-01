@@ -8,17 +8,17 @@ variable "location" {
   type        = string
 }
 
-variable "vnet_name" {
-  description = "Virtual Network Name"
-  type        = string
-}
-
-variable "subnet_name" {
-  description = "Subnet Name"
-  type        = string
+variable "vm_count" {
+  description = "Number of VMs to create"
+  type        = number
 }
 
 variable "storage_account_name" {
   description = "Storage Account Name"
+  type        = string
+}
+
+variable "subnet_id" {
+  description = "Subnet ID"
   type        = string
 }

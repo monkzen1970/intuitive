@@ -17,8 +17,3 @@ variable "subnet_name" {
   description = "Subnet Name"
   type        = string
 }
-
-variable "storage_account_name" {
-  description = "Storage Account Name"
-  type        = string
-}
