@@ -31,7 +31,7 @@ Replace my_container_name with the desired name for your container, and my_image
 
 To start the container, run the following command:
 ````
-docker start my_container_name
+docker run --name my_container_name -d my_image_name tail -f /dev/null
 ````
 Replace my_container_name with the name you assigned to the container.
 
@@ -43,6 +43,33 @@ such as container ID, image name, status, and more.
 Remember to adjust the names according to your preference. By default, 
 Docker will allocate a random name for the container if you don't specify one explicitly.
 
+To upload a Docker image to the Docker Hub registry, you can follow these steps:
+
+Build your Docker image using the Dockerfile. Let's assume you have built an image named my_image_name.
+Log in to Docker Hub using the docker login command:
+````
+docker login
+````
+You will be prompted to enter your Docker Hub username and password. If successful, you will receive a "Login Succeeded" message.
+
+Tag your local image with the Docker Hub repository name. 
+The repository name should follow the format username/repository, where username is your Docker Hub username, 
+and repository is the name you want to give to your repository on Docker Hub. For example:
+````
+docker tag my_image_name username/repository
+````
+Replace my_image_name with the name of your local image, and username/repository with the appropriate values.
+
+Push the tagged image to Docker Hub:
+````
+docker push username/repository
+````
+This command will upload the tagged image to your Docker Hub repository. 
+It may take some time depending on the size of the image and your internet connection speed.
+
+Once the push is complete, your image will be available on Docker Hub for others to use.
+
+Note: Make sure you have the necessary permissions to upload images to the repository associated with your Docker Hub account.
 
 
 
